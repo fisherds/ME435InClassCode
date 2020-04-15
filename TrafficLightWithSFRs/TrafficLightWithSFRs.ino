@@ -1,3 +1,7 @@
+// TODO: This is not done yet!
+// For the HW convert this to use SFRs
+
+
 #define PIN_LED_RED 10
 #define PIN_LED_YELLOW 9
 #define PIN_LED_GREEN 6
