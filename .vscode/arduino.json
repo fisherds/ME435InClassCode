@@ -1,5 +1,5 @@
 {
-    "sketch": "TrafficLightArduinoLibrary/TrafficLightAruinoLibrary.ino",
     "board": "arduino:avr:uno",
-    "port": "/dev/tty.usbserial-DN0421L4"
+    "port": "/dev/tty.usbserial-DN0421L4",
+    "sketch": "OneButton3LEDsWithSFRs/OneButton3LEDsWithSFRs.ino"
 }

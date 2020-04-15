@@ -18,12 +18,18 @@ void setup() {
 
 void loop() {
   if (digitalRead(PIN_PUSHBUTTON_BLUE) == PRESSED) {
-    digitalWrite(PIN_LED_RED, HIGH);
-    digitalWrite(PIN_LED_YELLOW, HIGH);
-    digitalWrite(PIN_LED_GREEN, HIGH);
+    // Other ways that work.
+    //PORTB = PORTB | B00000100;
+    // PORTB = PORTB | 0x04;
+    // PORTB |= 0x04;
+    // PORTB |= (1 << PORTB2);
+    PORTB |= _BV(PORTB2);   //replaces digitalWrite(PIN_LED_RED, HIGH);
+    PORTB |= _BV(PORTB1); // digitalWrite(PIN_LED_YELLOW, HIGH);
+    PORTD |= _BV(PORTD6); // digitalWrite(PIN_LED_GREEN, HIGH);
   } else {
-    digitalWrite(PIN_LED_RED, LOW);
-    digitalWrite(PIN_LED_YELLOW, LOW);
-    digitalWrite(PIN_LED_GREEN, LOW);
+    // PORTB = PORTB & B11111011;
+    PORTB &= ~_BV(PORTB2);  //digitalWrite(PIN_LED_RED, LOW);
+    PORTB &= ~_BV(PORTB1);  // digitalWrite(PIN_LED_YELLOW, LOW);
+    PORTD &= ~_BV(PORTD6);  // digitalWrite(PIN_LED_GREEN, LOW);
   }
 }
