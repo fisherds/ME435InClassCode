@@ -1,4 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "port": "/dev/tty.usbserial-DN0421L4"
+    "port": "/dev/tty.usbserial-DN0421L4",
+    "sketch": "02_ExternalInterrupts/FourLEDsSequencingWithArduinoLibrary/FourLEDsSequencingWithArduinoLibrary.ino"
 }

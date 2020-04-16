@@ -90,9 +90,7 @@ void loop()
 
   greenState = digitalRead(PIN_PUSHBUTTON_GREEN);
   if (greenState != lastGreenState) {
-    if (greenState == HIGH) {
-      // Do nothing the button was just released
-    } else {
+    if (!greenState) {
       addLed(PIN_LED_GREEN);
     }
     delay(50);  // Delay a little bit to avoid bouncing
@@ -101,9 +99,7 @@ void loop()
 
   blueState = digitalRead(PIN_PUSHBUTTON_BLUE);
   if (blueState != lastBlueState) {
-    if (blueState == HIGH) {
-      // Do nothing the button was just released
-    } else {
+    if (!blueState) {
       runSequence();
     }
     delay(50);  // Delay a little bit to avoid bouncing
@@ -119,19 +115,16 @@ void addLed(uint8_t newLedPin) {
 }
 
 void runSequence() {
+  digitalWrite(PIN_LED_BLUE, LOW);
   for (int k = 0; k < sizeof(savedLeds); k++) {
     uint8_t activeLedPin = savedLeds[k];
-    for (int j = 0; j < sizeof(ledPins); j++) {
-      uint8_t ledPin = ledPins[j];
-      digitalWrite(ledPin, activeLedPin == ledPin);
-    }
+    digitalWrite(activeLedPin, HIGH);
     delay(1000);
     digitalWrite(activeLedPin, LOW);
     delay(100);
   }
   resetArray();
 }
-
 
 // Simple ISRs that set flags only
 void yellow_pushbutton_isr() {
