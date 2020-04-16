@@ -1,15 +1,8 @@
 // TODO: Get rid of these Arduino Library #defines
-#define PIN_LED_RED 10
-#define PIN_LED_YELLOW 9
-#define PIN_LED_GREEN 6
-#define PIN_LED_BLUE 5
-
 // Can be used for INT1
 #define PIN_PUSHBUTTON_RED 3
 // Can be used for INT0
 #define PIN_PUSHBUTTON_YELLOW 2
-#define PIN_PUSHBUTTON_GREEN 1
-#define PIN_PUSHBUTTON_BLUE 0
 
 // Output PORTs and BITs
 #define REG_PORT_LED_RED PORTB
