@@ -30,11 +30,6 @@ uint8_t savedLeds[10] = {PIN_LED_BLUE,
                         PIN_LED_BLUE,
                         PIN_LED_BLUE};
 
-uint8_t ledPins[4] = {PIN_LED_RED,
-                        PIN_LED_YELLOW,
-                        PIN_LED_GREEN,
-                        PIN_LED_BLUE};
-
 void setup()
 {
   Serial.begin(9600);
