@@ -1,9 +1,3 @@
-// TODO: Get rid of these Arduino Library #defines
-// Can be used for INT1
-#define PIN_PUSHBUTTON_RED 3
-// Can be used for INT0
-#define PIN_PUSHBUTTON_YELLOW 2
-
 // Output PORTs and BITs
 #define REG_PORT_LED_RED PORTB
 #define BIT_LED_RED 2
@@ -51,8 +45,13 @@ void setup() {
   REG_PORT_PUSHBUTTON_BLUE |= _BV(BIT_PUSHBUTTON_BLUE);
 
   // Update this later!
-  attachInterrupt(digitalPinToInterrupt(PIN_PUSHBUTTON_YELLOW), yellow_pushbutton_isr, FALLING);  // Pin 2 = RD2 = INT0
-  attachInterrupt(digitalPinToInterrupt(PIN_PUSHBUTTON_RED), red_pushbutton_isr, FALLING);        // Pin 3 = RD3 = INT1
+  // attachInterrupt(digitalPinToInterrupt(PIN_PUSHBUTTON_YELLOW), yellow_pushbutton_isr, FALLING);  // Pin 2 = RD2 = INT0
+  // attachInterrupt(digitalPinToInterrupt(PIN_PUSHBUTTON_RED), red_pushbutton_isr, FALLING);        // Pin 3 = RD3 = INT1
+
+  // EICRA = 0x0A;  // Set INT0 and INT1 to FALLING edge interrupts
+  EICRA = _BV(ISC11) | _BV(ISC01);  // Set INT0 and INT1 to FALLING edge interrupts
+  // EIMSK = 0x03;  // Turns on both INT0 and INT1
+  EIMSK = _BV(INT0) | _BV(INT1);  // Turns on both INT0 and INT1
 }
 
 void showFeedbackLeds() {
@@ -138,10 +137,12 @@ void loop() {
   lastBlueState = blueState;
 }
 
-void yellow_pushbutton_isr() {
+// void yellow_pushbutton_isr() {
+ISR(INT0_vect) {
   mainEventFlags |= FLAG_YELLOW_PUSHBUTTON;
 }
 
-void red_pushbutton_isr() {
+// void red_pushbutton_isr() {
+ISR(INT1_vect) {
   mainEventFlags |= FLAG_RED_PUSHBUTTON;
 }
