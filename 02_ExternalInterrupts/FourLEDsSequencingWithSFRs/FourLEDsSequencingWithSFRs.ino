@@ -1,3 +1,5 @@
+// THIS FILE HAS ERRORS.  It was a work in progress from the videos!
+
 // Output PORTs and BITs
 #define REG_PORT_LED_RED PORTB
 #define BIT_LED_RED 2
@@ -104,13 +106,14 @@ void oldTempTest() {
 
 void loop() {
   // Keep as a reference for the Sequencing HW
-  //  showFeedbackLeds();
+  showFeedbackLeds();
   if (mainEventFlags & FLAG_RED_PUSHBUTTON) {
     delay(30);
     mainEventFlags &= ~FLAG_RED_PUSHBUTTON;
     if (bit_is_clear(REG_PIN_PUSHBUTTON_RED, BIT_PUSHBUTTON_RED)) {
       // Do the action!
-      REG_PORT_LED_RED ^= _BV(BIT_LED_RED);  // digitalWrite(PIN_LED_RED, !digitalRead(PIN_LED_RED));
+      //REG_PORT_LED_RED ^= _BV(BIT_LED_RED);  // digitalWrite(PIN_LED_RED, !digitalRead(PIN_LED_RED));
+      addLed(BIT_LED_RED);
     }
   }
   if (mainEventFlags & FLAG_YELLOW_PUSHBUTTON) {
@@ -118,7 +121,8 @@ void loop() {
     mainEventFlags &= ~FLAG_YELLOW_PUSHBUTTON;
     if (bit_is_clear(REG_PIN_PUSHBUTTON_YELLOW, BIT_PUSHBUTTON_YELLOW)) {
       // Do the action!
-      REG_PORT_LED_YELLOW ^= _BV(BIT_LED_YELLOW);  // digitalWrite(PIN_LED_YELLOW, !digitalRead(PIN_LED_YELLOW));
+      //REG_PORT_LED_YELLOW ^= _BV(BIT_LED_YELLOW);  // digitalWrite(PIN_LED_YELLOW, !digitalRead(PIN_LED_YELLOW));
+      addLed(BIT_LED_YELLOW);
     }
   }
   if (mainEventFlags & FLAG_GREEN_PUSHBUTTON) {
@@ -126,7 +130,8 @@ void loop() {
     mainEventFlags &= ~FLAG_GREEN_PUSHBUTTON;
     if (bit_is_clear(REG_PIN_PUSHBUTTON_GREEN, BIT_PUSHBUTTON_GREEN)) {
       // Do the action!
-      REG_PORT_LED_GREEN ^= _BV(BIT_LED_GREEN);  // digitalWrite(PIN_LED_GREEN, !digitalRead(PIN_LED_GREEN));
+      //REG_PORT_LED_GREEN ^= _BV(BIT_LED_GREEN);  // digitalWrite(PIN_LED_GREEN, !digitalRead(PIN_LED_GREEN));
+      addLed(BIT_LED_GREEN);
     }
   }
   if (mainEventFlags & FLAG_BLUE_PUSHBUTTON) {
@@ -134,43 +139,55 @@ void loop() {
     mainEventFlags &= ~FLAG_BLUE_PUSHBUTTON;
     if (bit_is_clear(REG_PIN_PUSHBUTTON_BLUE, BIT_PUSHBUTTON_BLUE)) {
       // Do the action!
-      REG_PORT_LED_BLUE ^= _BV(BIT_LED_BLUE);  // digitalWrite(PIN_LED_BLUE, !digitalRead(PIN_LED_BLUE));
+      //REG_PORT_LED_BLUE ^= _BV(BIT_LED_BLUE);  // digitalWrite(PIN_LED_BLUE, !digitalRead(PIN_LED_BLUE));
+      runSequence();
     }
   }
-
-// NO POLLING!
-  // //greenState = digitalRead(PIN_PUSHBUTTON_GREEN);
-  // greenState = bit_is_set(REG_PIN_PUSHBUTTON_GREEN, BIT_PUSHBUTTON_GREEN);
-  // if (greenState != lastGreenState) {
-  //   if (!greenState) {
-  //     // Do the action!
-  //     REG_PORT_LED_GREEN ^= _BV(BIT_LED_GREEN);  // digitalWrite(PIN_LED_GREEN, !digitalRead(PIN_LED_GREEN));
-  //   }
-  //   delay(50);
-  // }
-  // lastGreenState = greenState;
-
-  // // blueState = digitalRead(PIN_PUSHBUTTON_BLUE);
-  // blueState = bit_is_set(REG_PIN_PUSHBUTTON_BLUE, BIT_PUSHBUTTON_BLUE);
-  // if (blueState != lastBlueState) {
-  //   if (!blueState) {
-  //     // Do the action!
-  //     REG_PORT_LED_BLUE ^= _BV(BIT_LED_BLUE);  // digitalWrite(PIN_LED_BLUE, !digitalRead(PIN_LED_BLUE));
-  //   }
-  //   delay(50);
-  // }
-  // lastBlueState = blueState;
 }
 
-// void yellow_pushbutton_isr() {
-// ISR(INT0_vect) {
-//   mainEventFlags |= FLAG_YELLOW_PUSHBUTTON;
-// }
+void resetArray() {
+  currentIndex = 0;
+  savedLeds[0] = PIN_LED_BLUE;
+  savedLeds[1] = PIN_LED_BLUE;
+  savedLeds[2] = PIN_LED_BLUE;
+  savedLeds[3] = PIN_LED_BLUE;
+  savedLeds[4] = PIN_LED_BLUE;
+  savedLeds[5] = PIN_LED_BLUE;
+  savedLeds[6] = PIN_LED_BLUE;
+  savedLeds[7] = PIN_LED_BLUE;
+  savedLeds[8] = PIN_LED_BLUE;
+  savedLeds[9] = PIN_LED_BLUE;
+}
 
-// void red_pushbutton_isr() {
-// ISR(INT1_vect) {
-//   mainEventFlags |= FLAG_RED_PUSHBUTTON;
-// }
+void addLed(uint8_t newLedPin) {
+  if (currentIndex < sizeof(savedLeds)) {
+    savedLeds[currentIndex] = newLedPin;
+    currentIndex++;
+  }
+}
+
+void runSequence() {
+  // digitalWrite(PIN_LED_BLUE, LOW);
+  REG_PORT_LED_BLUE &= ~_BV(BIT_LED_BLUE);
+  for (int k = 0; k < sizeof(savedLeds); k++) {
+    uint8_t activeLedBit = savedLeds[k];
+    // digitalWrite(activeLedPin, HIGH);
+    if (activeLedBit == BIT_LED_RED || activeLedBit == BIT_LED_RED) {
+      REG_PORT_LED_RED |= _BV(activeLedBit);
+    } else {
+      REG_PORT_LED_GREEN |= _BV(activeLedBit);
+    }
+    delay(1000);
+    // digitalWrite(activeLedPin, LOW);
+    if (activeLedBit == BIT_LED_RED || activeLedBit == BIT_LED_RED) {
+      REG_PORT_LED_RED &= ~_BV(activeLedBit);
+    } else {
+      REG_PORT_LED_GREEN &= ~_BV(activeLedBit);
+    }
+    delay(100);
+  }
+  resetArray();
+}
 
 ISR(PCINT2_vect) {
   // ISR called means that RD0, RD1, RD2, or RD3 changed.
