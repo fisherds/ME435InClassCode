@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
     "port": "/dev/tty.usbserial-DN0421L4",
-    "sketch": "02_ExternalInterrupts/FourToggleLEDsWithEnableInterrupts/FourToggleLEDsWithEnableInterrupts.ino"
+    "sketch": "03_Timers/DrFisherBlinkSFRs/DrFisherBlinkSFRs.ino"
 }
